@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# Environment
+.env
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large raw data (download separately — see README)
+data/raw/
+data/cache/
+data/gtfs/
+data/gtfs_uploaded/
+*.parquet
+*.zip
+*.csv
+*.csv.gz
+!data_sample/*.csv
+
+# Build artefacts
+*.log
+.ipynb_checkpoints/
+.pytest_cache/

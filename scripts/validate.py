@@ -128,7 +128,7 @@ def main():
     for _ in range(10):
         r, d = random.choice(routes)
         ranks = topology[(r, d)]
-        ordered = list(ranks.keys())
+        ordered = sorted(ranks.keys(), key=lambda s: ranks[s])
         if len(ordered) < 4:
             continue
         a_idx = random.randint(0, len(ordered) - 3)
@@ -142,16 +142,36 @@ def main():
                       (tickets["end_norm"] == d)]
         n = len(sub)
         total_psg = int(sub["passenger_count"].sum()) if n else 0
+
+        # Trace all forward tickets on (r, direction) traversing segments [a, b)
+        rm = topology[(r, direction)]
+        a_rank, b_rank = rm[o], rm[d]
+        sub_rd = tickets[(tickets["route"] == r) & (tickets["direction"] == direction)].copy()
+        sub_rd["sa"] = sub_rd["start_norm"].map(rm)
+        sub_rd["sb"] = sub_rd["end_norm"].map(rm)
+        sub_rd = sub_rd.dropna(subset=["sa", "sb"])
+        sub_rd = sub_rd[sub_rd["sa"] < sub_rd["sb"]]
+        raw_seg_sum = sum(
+            int(sub_rd.loc[(sub_rd["sa"] <= s) & (s < sub_rd["sb"]), "passenger_count"].sum())
+            for s in range(a_rank, b_rank)
+        )
+
         result = search_options_topology(
-            tickets, segments, o, d, topology=topology, max_options=20
+            tickets, segments, o, d, topology=topology, max_options=max(20, len(routes))
         )
         matched = [
             opt for opt in result["options"]
             if opt["route"] == r and opt["direction"] == direction
         ]
         opt_load = matched[0]["historical_segment_load"] if matched else 0
+        assert raw_seg_sum == int(round(opt_load)), (
+            f"Traceability mismatch for {r} ({direction}) {o}->{d}: "
+            f"raw_seg_sum={raw_seg_sum} vs opt_load={opt_load}"
+        )
         print(f"  {r:18} {direction:5}  {o!r:28} -> {d!r:28}  "
-              f"tickets={n:>4}  pax={total_psg:>5}  route_seg_load={int(opt_load):>6}")
+              f"direct_tkts={n:>4}  direct_pax={total_psg:>5}  "
+              f"raw_trav_seg_pax={raw_seg_sum:>6}  route_seg_load={int(round(opt_load)):>6}")
+    print("  PASS")
 
     # ---- 7. Heatmap-side cross check ---------------------------------------
     line("-")

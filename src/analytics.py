@@ -59,13 +59,13 @@ def weekday_daily_volume(tickets: pd.DataFrame) -> pd.DataFrame:
 
 
 def peak_vs_offpeak(tickets: pd.DataFrame) -> Dict:
-    """Compare peak windows (08-11, 17-21) with off-peak hours."""
+    """Compare peak hour buckets (08:00–11:59, 17:00–21:59 IST) with off-peak hours."""
     if tickets is None or len(tickets) == 0:
         return {
             "peak_passenger_volume": 0,
             "offpeak_passenger_volume": 0,
             "peak_share_pct": 0.0,
-            "peak_window_label": "08:00–11:00 and 17:00–21:00 IST",
+            "peak_window_label": "08:00–11:59 and 17:00–21:59 IST",
         }
     h = tickets["ticket_hour"]
     peak_mask = ((h >= 8) & (h <= 11)) | ((h >= 17) & (h <= 21))
@@ -76,7 +76,7 @@ def peak_vs_offpeak(tickets: pd.DataFrame) -> Dict:
         "peak_passenger_volume": peak,
         "offpeak_passenger_volume": off,
         "peak_share_pct": round(pct_peak, 1),
-        "peak_window_label": "08:00–11:00 and 17:00–21:00 IST",
+        "peak_window_label": "08:00–11:59 and 17:00–21:59 IST",
     }
 
 

@@ -1,4 +1,0 @@
-stop_id,stop_name,stop_lat,stop_lon
-1,Badarpur Border,28.493,77.303
-2,Govindpuri,28.545,77.263
-3,Kalkaji Mandir,28.550,77.258

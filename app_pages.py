@@ -1167,7 +1167,7 @@ def render_segment_explorer(tickets, segments, topology, *, topology_meta: Optio
 
     st.markdown(
         '<div class="ll-panel-head" style="margin-top:0.85rem;">'
-        f'<div class="ll-panel-title">Animated Stop-to-Stop Demand Corridor · {route} ({sel_dir.upper()})</div>'
+        f'<div class="ll-panel-title">Animated Stop-to-Stop Demand Corridor · {_esc(route)} ({_esc(sel_dir.upper())})</div>'
         '<div class="ll-panel-meta">Beam colour = demand tier · thicker = higher</div>'
         '</div>',
         unsafe_allow_html=True,

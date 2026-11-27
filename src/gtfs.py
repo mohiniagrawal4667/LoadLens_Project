@@ -141,7 +141,7 @@ def extract_gtfs_zip(file_obj: BinaryIO, target_dir: Path) -> Dict[str, Any]:
                     "present_files": [],
                     "error": "Unsafe path traversal entry detected in GTFS ZIP archive.",
                 }
-            base = Path(member.filename).name
+            base = Path(member.filename.replace("\\", "/")).name
             if not (base.endswith(".txt") and base):
                 continue
             if member.file_size > MAX_GTFS_MEMBER_BYTES:
