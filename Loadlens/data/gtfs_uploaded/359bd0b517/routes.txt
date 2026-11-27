@@ -1,3 +1,0 @@
-route_id,route_short_name
-R1,774UP
-R2,433DOWN
